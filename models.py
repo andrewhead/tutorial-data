@@ -2,9 +2,8 @@ import logging
 import datetime
 import json
 import copy
-import os.path
 from peewee import Model, SqliteDatabase, Proxy, PostgresqlDatabase,\
-    IntegerField, DateTimeField, TextField, BooleanField, FloatField, ForeignKeyField
+    IntegerField, DateTimeField, TextField, ForeignKeyField
 
 
 logger = logging.getLogger('data')
@@ -14,7 +13,7 @@ DATABASE_NAME = 'data'
 db_proxy = Proxy()
 
 
-class BatchInserter(object):
+class BatchInserter:
     '''
     A class for saving database records in batches.
     Save rows to the batch inserter, and it will save the rows to
@@ -77,7 +76,7 @@ class BatchInserter(object):
 class ProxyModel(Model):
     ''' A peewee model that is connected to the proxy defined in this module. '''
 
-    class Meta:
+    class Meta:  # pylint: disable=no-init,too-few-public-methods
         database = db_proxy
 
 
@@ -105,6 +104,28 @@ class ExampleData(ProxyModel):
     # Some examples of data fields
     example_int = IntegerField(index=True)
     example_text = TextField(index=True)
+
+
+class Post(ProxyModel):
+    ''' A Stack Overflow post. '''
+
+    fetch_index = IntegerField(index=True)
+    date = DateTimeField(default=datetime.datetime.now)
+
+    creation_date = DateTimeField()
+    question_id = IntegerField()
+    answer_count = IntegerField()
+    score = IntegerField()
+    body_markdown = TextField()
+    title = TextField()
+    link = TextField()
+
+
+class PostTag(ProxyModel):
+    ''' A tag associated with a Stack Overflow post. '''
+
+    post = ForeignKeyField(Post)
+    tag_name = TextField(index=True)
 
 
 def init_database(db_type, config_filename=None):
@@ -139,4 +160,6 @@ def create_tables():
     db_proxy.create_tables([
         Command,
         ExampleData,
+        Post,
+        PostTag,
     ], safe=True)

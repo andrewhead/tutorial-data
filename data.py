@@ -16,21 +16,21 @@ data_logger.setLevel(logging.DEBUG)
 data_logger.addHandler(log_handler)
 data_logger.propagate = False
 
-from models import create_tables, init_database, Command
-from migrate import run_migration
+from models import create_tables, init_database, Command  # pylint: disable=wrong-import-position
+from migrate import run_migration  # pylint: disable=wrong-import-position
 
 # List out the data processing modules that you've defined in the subdirectories here
-# from fetch import <module-1>, <module-2>, ...
+from fetch import stack_overflow_posts  # pylint: disable=wrong-import-position
 # from import_ import <module-1>, <module-2>, ...
 # from compute import <module-1>, <module-2>, ...
-# from dump import <module-1> as <dump_module_1>, ...
+from dump import random_posts  # pylint: disable=wrong-import-position
 
 # And then list the imported module under the appropriate subcommands below:
 COMMANDS = {
     'fetch': {
         'description': "Fetch data from the web.",
         'module_help': "Type of data to fetch.",
-        'modules': [],
+        'modules': [stack_overflow_posts],
     },
     'import': {
         'description': "Import data from logs.",
@@ -52,12 +52,12 @@ COMMANDS = {
     'dump': {
         'description': "Dump data to a text file.",
         'module_help': "Type of data to dump.",
-        'modules': [],
+        'modules': [random_posts],
     },
 }
 
 
-def run_tests(*args, **kwargs):
+def run_tests(*_, **__):
     suite = unittest.defaultTestLoader.discover(os.getcwd())
     unittest.TextTestRunner().run(suite)
 
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description="Manage data for software packages.")
     subparsers = parser.add_subparsers(help="Sub-commands for managing data", dest='command')
 
-    for command in COMMANDS.keys():
+    for command in COMMANDS:
 
         # Create a parser for each top-level command, with subparsers for each module
         command_spec = COMMANDS[command]
