@@ -1,18 +1,4 @@
-# Data Processing Template
-
-Throughout the years, I've worked on many projects with
-shared data processing needs:
-
-* It should be easy to write a new data processing script
-* The data should be stored in an easy-to-query database
-* The data should be easily exportable to CSV
-* There should be some record of when I ran certain data
-  processing actions, and when I produced derivative CSV
-  files. All of this should be by default
-
-The result is this repository, which provides an extensible
-starting point for managing Python data processing scripts
-and the data that they produce.
+# Data Processing Scripts for Tutorials
 
 ## Running commands
 
@@ -23,6 +9,10 @@ virtualenv venv -p python3
 source venv/bin/activate
 pip install -r reqs.txt
 ```
+
+If you want to run any scripts that fetch PDFs, install
+wkhtmltopdf. Download the software
+[here](https://wkhtmltopdf.org/downloads.html).
 
 The main interface to the code is the `data.py` script. The
 rest of the commands can be run as subcommands corresponding
@@ -58,6 +48,22 @@ where `timestamp` is the time that the data was dumped.
 These can be produced in CSV, JSON, or text format,
 depending on the decorators given to the dump function in
 the dump modules.
+
+## Extending the scripts in this directory
+
+Throughout the years, I've worked on many projects with
+shared data processing needs:
+
+* It should be easy to write a new data processing script
+* The data should be stored in an easy-to-query database
+* The data should be easily exportable to CSV
+* There should be some record of when I ran certain data
+  processing actions, and when I produced derivative CSV
+  files. All of this should be by default
+
+The result is this repository, which provides an extensible
+starting point for managing Python data processing scripts
+and the data that they produce.
 
 ## Running migrations
 

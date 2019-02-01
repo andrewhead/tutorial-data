@@ -55,10 +55,35 @@ def make_request(method, *args, **kwargs):
     return res
 
 
+def _get_mendeley_item_count(response):
+    '''
+    Returns and integer if a count was found, otherwise returns None.
+    See https://dev.mendeley.com/reference/topics/pagination.html for more documentation.
+    '''
+
+    if 'mendeley-count' not in response.headers:
+        return None
+
+    count = response.headers['mendeley-count']
+    count_int = None
+    try:
+        count_int = int(count)
+    except ValueError as e:
+        logger.warning("Unexpected item count %s: %s", count, e)
+
+    return count_int
+
+
 def _get_next_page_url(response):
 
     # If there is no "Link" header, then there is no next page
-    if 'Link' not in response.headers:
+    header = None
+    if 'Link' in response.headers:
+        header = response.headers['Link']
+    elif 'link' in response.headers:
+        header = response.headers['link']
+
+    if header is None:
         return None
 
     # Extract the next URL from the Link header.

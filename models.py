@@ -128,6 +128,32 @@ class PostTag(ProxyModel):
     tag_name = TextField(index=True)
 
 
+class MendeleyDocument(ProxyModel):
+    ''' An identifier for a Mendeley document. '''
+
+    fetch_index = IntegerField(index=True)
+    date = DateTimeField(default=datetime.datetime.now)
+
+    document_id = TextField(index=True)
+
+
+class MendeleyAnnotation(ProxyModel):
+    ''' An annotation on a Mendeley document. '''
+
+    fetch_index = IntegerField(index=True)
+    date = DateTimeField(default=datetime.datetime.now)
+
+    document = ForeignKeyField(MendeleyDocument)
+    annotation_id = TextField()
+    type = TextField()
+    text = TextField()
+    left = IntegerField()
+    top = IntegerField()
+    right = IntegerField()
+    bottom = IntegerField()
+    page = IntegerField()
+
+
 def init_database(db_type, config_filename=None):
 
     if db_type == 'postgres':
@@ -162,4 +188,6 @@ def create_tables():
         ExampleData,
         Post,
         PostTag,
+        MendeleyDocument,
+        MendeleyAnnotation,
     ], safe=True)

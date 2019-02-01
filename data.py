@@ -20,7 +20,7 @@ from models import create_tables, init_database, Command  # pylint: disable=wron
 from migrate import run_migration  # pylint: disable=wrong-import-position
 
 # List out the data processing modules that you've defined in the subdirectories here
-from fetch import stack_overflow_posts  # pylint: disable=wrong-import-position
+from fetch import stack_overflow_posts, tutorial_pdfs, mendeley_documents  # pylint: disable=wrong-import-position
 # from import_ import <module-1>, <module-2>, ...
 # from compute import <module-1>, <module-2>, ...
 from dump import random_posts  # pylint: disable=wrong-import-position
@@ -30,7 +30,7 @@ COMMANDS = {
     'fetch': {
         'description': "Fetch data from the web.",
         'module_help': "Type of data to fetch.",
-        'modules': [stack_overflow_posts],
+        'modules': [mendeley_documents, stack_overflow_posts, tutorial_pdfs],
     },
     'import': {
         'description': "Import data from logs.",
