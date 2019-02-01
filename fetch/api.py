@@ -88,7 +88,7 @@ def _get_next_page_url(response):
 
     # Extract the next URL from the Link header.
     next_url = None
-    next_url_match = re.match("<([^>]*)>; rel=\"next\",", response.headers['Link'])
+    next_url_match = re.search("<([^>]*)>; rel=\"next\"", header)
     if next_url_match is not None:
         next_url = next_url_match.group(1)
     return next_url

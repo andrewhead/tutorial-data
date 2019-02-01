@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 import logging
 import time
 import datetime
@@ -21,7 +20,6 @@ DEFAULT_PARAMS = {
     'page_size': 100,  # the maximum page size
 }
 REQUEST_DELAY = 0.1  # The Stack Exchange API requests you don't query more than 30 times / second
-tag_cache = {}  # We avoid querying for tags when we don't need to by keeping them in this cache.
 
 
 def _save_post(question, fetch_index):

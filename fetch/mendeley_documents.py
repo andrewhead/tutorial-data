@@ -13,8 +13,7 @@ API_URL = "https://api.mendeley.com/documents"
 DEFAULT_PARAMS = {
     'limit': 500,  # the maximum number of documents
 }
-REQUEST_DELAY = 0.1  # The Stack Exchange API requests you don't query more than 30 times / second
-tag_cache = {}  # We avoid querying for tags when we don't need to by keeping them in this cache.
+REQUEST_DELAY = 0.1
 
 
 def _save_document(document, fetch_index):
@@ -34,9 +33,6 @@ def fetch_documents(fetch_index, token, group_id):
     # Prepare the request authorization
     headers = {'Authorization': 'Bearer ' + token}
 
-    # We intentionally choose to iterate until the results tell us there are 'no more'.
-    # The Stack Exchange API documents tell us that requesting a 'total' from the API
-    # will double the request time, so we don't fetch the total.
     next_page_url = API_URL
 
     first_iteration = True
