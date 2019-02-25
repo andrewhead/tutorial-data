@@ -24,7 +24,7 @@ from fetch import stack_overflow_posts, tutorial_pdfs  # pylint: disable=wrong-i
 from fetch import mendeley_annotations, mendeley_documents  # pylint: disable=wrong-import-position
 # from import_ import <module-1>, <module-2>, ...
 # from compute import <module-1>, <module-2>, ...
-from dump import random_posts  # pylint: disable=wrong-import-position
+from dump import random_posts, tagged_posts  # pylint: disable=wrong-import-position
 
 # And then list the imported module under the appropriate subcommands below:
 COMMANDS = {
@@ -53,7 +53,7 @@ COMMANDS = {
     'dump': {
         'description': "Dump data to a text file.",
         'module_help': "Type of data to dump.",
-        'modules': [random_posts],
+        'modules': [random_posts, tagged_posts],
     },
 }
 
