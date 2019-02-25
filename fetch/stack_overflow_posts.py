@@ -9,20 +9,21 @@ from models import Post, PostTag
 
 
 logger = logging.getLogger('data')
-API_URL = "https://api.stackexchange.com/2.2/search/advanced"
+API_URL = "https://api.stackexchange.com/2.2/search/excerpts"
 DEFAULT_PARAMS = {
     # This filter was created with the form: https://api.stackexchange.com/docs/advanced-search
     # The filter specifies the fields of question data that we want to have returned.
-    'filter': '!17vhT8QTGnnTcQz6EleaarsFge8KpQFde*mLAy2*UyjR.z',
     'site': 'stackoverflow',
-    'q': '"this tutorial"',
+    'q': 'is:answer score:1',
+    'body': '"this tutorial"',
+    'filter': '!S_Vkl7.BKMaT7fJaJ)',
     'key': ')8bWqMwdZLM)87SK8n)LUA((',
     'page_size': 100,  # the maximum page size
 }
-REQUEST_DELAY = 0.1  # The Stack Exchange API requests you don't query more than 30 times / second
+REQUEST_DELAY = 0.05  # The Stack Exchange API requests you don't query more than 30 times / second
 
 
-def _save_post(question, fetch_index):
+def _save_post(post_data, fetch_index):
 
     # Dates are returned by the Stack Exchange API in Unix epoch time.
     # This inline method converts the timestamps to datetime objects that
@@ -32,21 +33,19 @@ def _save_post(question, fetch_index):
     # will also be in local time.
     timestamp_to_datetime = datetime.datetime.fromtimestamp
 
-    # Create a snapshot of this question
+    # Create a snapshot of this post
     post = Post.create(
         fetch_index=fetch_index,
-        question_id=question['question_id'],
-        view_count=question['view_count'],
-        answer_count=question['answer_count'],
-        score=question['score'],
-        creation_date=timestamp_to_datetime(question['creation_date']),
-        body_markdown=question['body_markdown'],
-        title=question['title'],
-        link=question['link'],
+        creation_date=timestamp_to_datetime(post_data['creation_date']),
+        post_id=post_data['answer_id'],
+        title=post_data['title'],
+        body_text=post_data['body'],
+        score=post_data['score'],
+        is_accepted=post_data['is_accepted'],
     )
 
     # Link this snapshot to all tags related to it
-    for tag_name in question['tags']:
+    for tag_name in post_data['tags']:
         PostTag.create(post=post, tag_name=tag_name)
 
 
@@ -83,7 +82,6 @@ def fetch_posts(fetch_index):
             more_results = response_data['has_more'] if response is not None else True
             time.sleep(REQUEST_DELAY)
             params['page'] += 1
-
 
     if progress_bar is not None:
         progress_bar.close()

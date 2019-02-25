@@ -3,7 +3,7 @@ import datetime
 import json
 import copy
 from peewee import Model, SqliteDatabase, Proxy, PostgresqlDatabase,\
-    IntegerField, DateTimeField, TextField, ForeignKeyField
+    BooleanField, IntegerField, DateTimeField, TextField, ForeignKeyField
 
 
 logger = logging.getLogger('data')
@@ -113,12 +113,12 @@ class Post(ProxyModel):
     date = DateTimeField(default=datetime.datetime.now)
 
     creation_date = DateTimeField()
-    question_id = IntegerField()
-    answer_count = IntegerField()
-    score = IntegerField()
-    body_markdown = TextField()
+    post_id = IntegerField()
     title = TextField()
-    link = TextField()
+    body_markdown = TextField(null=True)  # backfilled
+    body_text = TextField()
+    is_accepted = BooleanField()
+    score = IntegerField()
 
 
 class PostTag(ProxyModel):
