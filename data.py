@@ -21,17 +21,19 @@ from migrate import run_migration  # pylint: disable=wrong-import-position
 
 # List out the data processing modules that you've defined in the subdirectories here
 from fetch import stack_overflow_posts, tutorial_pdfs  # pylint: disable=wrong-import-position
+from fetch import stack_overflow_post_bodies  # pylint: disable=wrong-import-position
 from fetch import mendeley_annotations, mendeley_documents  # pylint: disable=wrong-import-position
 # from import_ import <module-1>, <module-2>, ...
-# from compute import <module-1>, <module-2>, ...
-from dump import random_posts, tagged_posts  # pylint: disable=wrong-import-position
+from compute import stack_overflow_post_links  # pylint: disable=wrong-import-position
+from dump import random_posts, stack_overflow_post_links as dump_post_links  # pylint: disable=wrong-import-position
 
 # And then list the imported module under the appropriate subcommands below:
 COMMANDS = {
     'fetch': {
         'description': "Fetch data from the web.",
         'module_help': "Type of data to fetch.",
-        'modules': [mendeley_annotations, mendeley_documents, stack_overflow_posts, tutorial_pdfs],
+        'modules': [mendeley_annotations, mendeley_documents, stack_overflow_posts,
+                    stack_overflow_post_bodies, tutorial_pdfs],
     },
     'import': {
         'description': "Import data from logs.",
@@ -41,7 +43,7 @@ COMMANDS = {
     'compute': {
         'description': "Compute derived fields from existing data.",
         'module_help': "Type of data to compute.",
-        'modules': [],
+        'modules': [stack_overflow_post_links],
     },
     'migrate': {
         'description':
@@ -53,7 +55,7 @@ COMMANDS = {
     'dump': {
         'description': "Dump data to a text file.",
         'module_help': "Type of data to dump.",
-        'modules': [random_posts, tagged_posts],
+        'modules': [random_posts, dump_post_links],
     },
 }
 

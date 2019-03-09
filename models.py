@@ -115,7 +115,7 @@ class Post(ProxyModel):
     creation_date = DateTimeField()
     post_id = IntegerField()
     title = TextField()
-    body_markdown = TextField(null=True)  # backfilled
+    body_html = TextField(null=True)  # backfilled
     body_text = TextField()
     is_accepted = BooleanField()
     score = IntegerField()
@@ -126,6 +126,14 @@ class PostTag(ProxyModel):
 
     post = ForeignKeyField(Post)
     tag_name = TextField(index=True)
+
+
+class PostLink(ProxyModel):
+    ''' An out-going link from a Stack Overflow post. '''
+
+    post = ForeignKeyField(Post)
+    url = TextField()
+    anchor_text = TextField()
 
 
 class MendeleyDocument(ProxyModel):
@@ -188,6 +196,7 @@ def create_tables():
         ExampleData,
         Post,
         PostTag,
+        PostLink,
         MendeleyDocument,
         MendeleyAnnotation,
     ], safe=True)

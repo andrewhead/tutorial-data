@@ -2,15 +2,15 @@ from __future__ import unicode_literals
 import logging
 
 from dump.dump import dump_csv
-from models import Post, PostTag
+from models import Post, PostTag, PostLink
 from peewee import fn
 
 
 logger = logging.getLogger('data')
 
 @dump_csv(__name__, column_names=[
-    'Question ID', 'Link', 'Title', 'Creation Date', 'Score', 'Answer Count', 'Tag'
-    ], delimiter="\t")
+    'Post ID', 'Link to Post', 'Title', 'Creation Date', 'Score', 'Is Accepted', 'Tags',
+    'Outgoing Link', 'Outgoing Link Anchor'], delimiter="\t")
 def main(fetch_index, *_, **__):
 
     if fetch_index == -1:
@@ -27,12 +27,12 @@ def main(fetch_index, *_, **__):
 
         post_records = []
         base_post_record = [
-            post.question_id,
-            post.link,
+            post.post_id,
+            'https://stackoverflow.com/a/' + str(post.post_id),
             post.title,
             post.creation_date,
             post.score,
-            post.answer_count,
+            post.is_accepted,
             ]
 
         post_tags = (
@@ -40,9 +40,17 @@ def main(fetch_index, *_, **__):
             .select()
             .where(PostTag.post == post)
             )
-        for post_tag in post_tags:
-            tagged_post_record = base_post_record + [post_tag.tag_name]
-            post_records.append(tagged_post_record)
+        tags = "".join(["<" + pt.tag_name + ">" for pt in post_tags])
+        base_post_record.append(tags)
+
+        post_links = (
+            PostLink
+            .select()
+            .where(PostLink.post == post)
+            )
+        for post_link in post_links:
+            post_record_with_links = base_post_record + [post_link.url, post_link.anchor_text]
+            post_records.append(post_record_with_links)
 
         yield post_records
 
